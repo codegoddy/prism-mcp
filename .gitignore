@@ -75,6 +75,6 @@ grammars/*.wasm
 *.error.log
 
 #Private files
-AI_PAIN_POINTS.md
-IMPLEMENTATION_PLAN.md
-VISION.md
+#AI_PAIN_POINTS.md
+#IMPLEMENTATION_PLAN.md
+#VISION.md

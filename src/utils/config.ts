@@ -1,6 +1,6 @@
-import { readFileSync } from "fs";
-import { existsSync } from "fs";
-import { logger, LogLevel } from "./logger.js";
+import { readFileSync } from 'fs';
+import { existsSync } from 'fs';
+import { logger, LogLevel } from './logger.js';
 
 export interface CacheConfig {
   enabled: boolean;
@@ -30,7 +30,7 @@ export interface PrismConfig {
   parser: ParserConfig;
   logging: {
     level: LogLevel;
-    output: "stderr" | "stdout";
+    output: 'stderr' | 'stdout';
   };
   paths: {
     grammars: string;
@@ -40,39 +40,39 @@ export interface PrismConfig {
 
 const DEFAULT_CONFIG: PrismConfig = {
   server: {
-    name: "prism-mcp",
-    version: "0.1.0"
+    name: 'prism-mcp',
+    version: '0.1.0',
   },
   cache: {
     enabled: true,
     maxSize: 1000,
-    ttl: 3600000
+    ttl: 3600000,
   },
   graph: {
     enableCpp: true,
     maxNodes: 1000000,
-    enableIncremental: true
+    enableIncremental: true,
   },
   parser: {
     maxFileSize: 10485760,
     timeout: 5000,
-    enableTypeChecking: false
+    enableTypeChecking: false,
   },
   logging: {
     level: LogLevel.INFO,
-    output: "stderr"
+    output: 'stderr',
   },
   paths: {
-    grammars: "./grammars",
-    cacheDir: "./build/.cache"
-  }
+    grammars: './grammars',
+    cacheDir: './build/.cache',
+  },
 };
 
 export class ConfigManager {
   private config: PrismConfig;
   private configPath: string;
 
-  constructor(configPath: string = "./prism.config.json") {
+  constructor(configPath: string = './prism.config.json') {
     this.configPath = configPath;
     this.config = this.loadConfig();
   }
@@ -80,18 +80,18 @@ export class ConfigManager {
   private loadConfig(): PrismConfig {
     if (existsSync(this.configPath)) {
       try {
-        const configData = readFileSync(this.configPath, "utf-8");
+        const configData = readFileSync(this.configPath, 'utf-8');
         const userConfig = JSON.parse(configData);
         const merged = this.deepMerge(DEFAULT_CONFIG, userConfig);
-        logger.info("Configuration loaded from file", { path: this.configPath });
+        logger.info('Configuration loaded from file', { path: this.configPath });
         return merged;
       } catch (error) {
-        logger.error("Failed to load config file, using defaults", error as Error);
+        logger.error('Failed to load config file, using defaults', error as Error);
         return { ...DEFAULT_CONFIG };
       }
     }
 
-    logger.info("No config file found, using defaults", { path: this.configPath });
+    logger.info('No config file found, using defaults', { path: this.configPath });
     return { ...DEFAULT_CONFIG };
   }
 
@@ -102,15 +102,15 @@ export class ConfigManager {
       Object.keys(source).forEach((key) => {
         if (this.isObject(source[key as keyof T])) {
           if (!(key in target)) {
-            Object.assign(output, { [key]: source[key as keyof T] });
+            (output as Record<string, unknown>)[key] = source[key as keyof T];
           } else {
             (output as Record<string, unknown>)[key] = this.deepMerge(
-              (target as Record<string, unknown>)[key],
-              source[key as keyof T] as Partial<unknown>
+              (target as Record<string, unknown>)[key] as T,
+              source[key as keyof T] as Partial<T>
             );
           }
         } else {
-          Object.assign(output, { [key]: source[key as keyof T] });
+          (output as Record<string, unknown>)[key] = source[key as keyof T];
         }
       });
     }
@@ -119,7 +119,7 @@ export class ConfigManager {
   }
 
   private isObject(item: unknown): item is Record<string, unknown> {
-    return item !== null && typeof item === "object" && !Array.isArray(item);
+    return item !== null && typeof item === 'object' && !Array.isArray(item);
   }
 
   getConfig(): PrismConfig {
@@ -132,40 +132,40 @@ export class ConfigManager {
 
   set<K extends keyof PrismConfig>(key: K, value: PrismConfig[K]): void {
     this.config[key] = value;
-    logger.info("Configuration updated", { key });
+    logger.info('Configuration updated', { key });
   }
 
   reload(): void {
     this.config = this.loadConfig();
-    logger.info("Configuration reloaded");
+    logger.info('Configuration reloaded');
   }
 
   validate(): { valid: boolean; errors: string[] } {
     const errors: string[] = [];
 
     if (this.config.cache.maxSize < 1) {
-      errors.push("cache.maxSize must be greater than 0");
+      errors.push('cache.maxSize must be greater than 0');
     }
 
     if (this.config.cache.ttl < 0) {
-      errors.push("cache.ttl must be non-negative");
+      errors.push('cache.ttl must be non-negative');
     }
 
     if (this.config.parser.maxFileSize < 0) {
-      errors.push("parser.maxFileSize must be non-negative");
+      errors.push('parser.maxFileSize must be non-negative');
     }
 
     if (this.config.parser.timeout < 0) {
-      errors.push("parser.timeout must be non-negative");
+      errors.push('parser.timeout must be non-negative');
     }
 
     if (this.config.graph.maxNodes < 1) {
-      errors.push("graph.maxNodes must be greater than 0");
+      errors.push('graph.maxNodes must be greater than 0');
     }
 
     const valid = errors.length === 0;
     if (!valid) {
-      logger.error("Configuration validation failed", { errors });
+      logger.error('Configuration validation failed', undefined, { errors });
     }
 
     return { valid, errors };
@@ -175,7 +175,7 @@ export class ConfigManager {
     return this.config.logging.level;
   }
 
-  getLogOutput(): "stderr" | "stdout" {
+  getLogOutput(): 'stderr' | 'stdout' {
     return this.config.logging.output;
   }
 }

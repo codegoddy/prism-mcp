@@ -1,11 +1,11 @@
-import { Parser as TreeParser } from "tree-sitter";
-import type { ASTNode, ParseResult } from "../types/ast.js";
-import { ParserError } from "../utils/errors.js";
+import treeSitter from 'tree-sitter';
+import type { ASTNode, ParseResult } from '../types/ast.js';
+import { ParserError } from '../utils/errors.js';
 
 export enum Language {
-  TypeScript = "typescript",
-  JavaScript = "javascript",
-  Python = "python"
+  TypeScript = 'typescript',
+  JavaScript = 'javascript',
+  Python = 'python',
 }
 
 export interface LanguageConfig {
@@ -22,7 +22,7 @@ export interface ParserInterface {
 }
 
 export abstract class BaseParser implements ParserInterface {
-  protected parser: TreeParser | null = null;
+  protected parser: InstanceType<typeof treeSitter> | null = null;
   protected language: Language;
   protected config: LanguageConfig;
 
@@ -33,15 +33,15 @@ export abstract class BaseParser implements ParserInterface {
 
   protected ensureParserInitialized(): void {
     if (this.parser === null) {
-      throw new ParserError("Parser not initialized");
+      throw new ParserError('Parser not initialized');
     }
   }
 
   abstract parse(source: string, filePath?: string): ParseResult;
 
   async parseFile(filePath: string): Promise<ParseResult> {
-    const { readFileSync } = await import("fs");
-    const source = readFileSync(filePath, "utf-8");
+    const { readFileSync } = await import('fs');
+    const source = readFileSync(filePath, 'utf-8');
     return this.parse(source, filePath);
   }
 
@@ -58,14 +58,26 @@ export abstract class BaseParser implements ParserInterface {
   }
 
   protected convertTreeToAST(rootNode: any, parent: ASTNode | null = null): ASTNode {
-    return {
+    const astNode: ASTNode = {
       type: rootNode.type,
       text: rootNode.text,
       startPosition: rootNode.startPosition,
       endPosition: rootNode.endPosition,
-      children: rootNode.children.map((child: any) => this.convertTreeToAST(child, null)),
-      namedChildren: rootNode.namedChildren.map((child: any) => this.convertTreeToAST(child, null)),
-      parent
+      children: [],
+      namedChildren: [],
+      parent,
     };
+
+    for (let i = 0; i < rootNode.childCount; i++) {
+      const child = rootNode.child(i);
+      const astChild = this.convertTreeToAST(child, astNode);
+      astChild.field = rootNode.fieldNameForChild(i) || undefined;
+      astNode.children.push(astChild);
+      if (child.isNamed) {
+        astNode.namedChildren.push(astChild);
+      }
+    }
+
+    return astNode;
   }
 }

@@ -8,7 +8,8 @@
     "prism-mcp": "./build/index.js"
   },
   "scripts": {
-    "build": "tsup",
+    "build": "node-gyp rebuild && tsup",
+    "build:native": "node-gyp rebuild",
     "dev": "tsup --watch",
     "test": "vitest",
     "test:coverage": "vitest --coverage",
@@ -37,20 +38,26 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "@typescript-eslint/types": "^7.0.0",
+    "chokidar": "^5.0.0",
     "tree-sitter": "^0.21.0",
     "tree-sitter-python": "^0.21.0",
-    "tree-sitter-typescript": "^0.21.0"
+    "tree-sitter-typescript": "^0.21.0",
+    "typescript": "^5.3.3"
   },
   "devDependencies": {
-    "@types/node": "^20.11.0",
+    "@types/node": "^20.19.27",
     "@typescript-eslint/eslint-plugin": "^7.0.0",
-    "@typescript-eslint/parser": "^7.0.0",
     "@vitest/coverage-v8": "^4.0.16",
+    "chokidar": "^5.0.0",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
+    "nan": "^2.24.0",
+    "node-addon-api": "^8.5.0",
     "prettier": "^3.2.0",
     "tsup": "^8.0.0",
-    "typescript": "^5.3.3",
+    "tsx": "^4.21.0",
     "vitest": "^4.0.16"
   },
   "files": [

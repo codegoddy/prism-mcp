@@ -1,0 +1,62 @@
+{
+  "name": "prism-mcp",
+  "version": "0.1.0",
+  "description": "High-performance Model Context Protocol (MCP) server for AST-based code understanding",
+  "type": "module",
+  "main": "./build/index.js",
+  "bin": {
+    "prism-mcp": "./build/index.js"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
+    "test:integration": "vitest run test/integration",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\"",
+    "benchmark": "node test/benchmark/run.js",
+    "benchmark:compare": "node test/benchmark/compare.js",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "ast",
+    "code-analysis",
+    "typescript",
+    "python",
+    "tree-sitter"
+  ],
+  "author": "Prism-MCP Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "tree-sitter": "^0.21.0",
+    "tree-sitter-python": "^0.21.0",
+    "tree-sitter-typescript": "^0.21.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "@vitest/coverage-v8": "^4.0.16",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "^3.2.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.3.3",
+    "vitest": "^4.0.16"
+  },
+  "files": [
+    "build/**/*",
+    "package.json",
+    "README.md",
+    "LICENSE"
+  ]
+}

@@ -1,0 +1,80 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Build output
+build/
+dist/
+out/
+*.tsbuildinfo
+
+# C/C++ build artifacts
+*.o
+*.so
+*.node
+*.gch
+*.a
+
+# Environment files
+.env
+.env.local
+.env.*.local
+*.env
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+*.sublime-project
+*.sublime-workspace
+
+# Testing
+coverage/
+.nyc_output/
+*.lcov
+test-results/
+
+# Cache directories
+.cache/
+.eslintcache
+.turbo/
+.parcel-cache/
+
+# Temporary files
+*.tmp
+*.temp
+tmp/
+temp/
+
+# Logs
+logs/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# TypeScript
+*.tsbuildinfo
+
+# Tree-sitter
+grammars/*.wasm
+
+# Debug files
+*.debug.log
+*.error.log
+
+#Private files
+AI_PAIN_POINTS.md
+IMPLEMENTATION_PLAN.md
+VISION.md

@@ -22,8 +22,17 @@ function findAddon() {
     }
   }
   
-  // Fallback: try to find it via absolute path if we can determine root
-  // This is a last resort
+  // Fallback: try via absolute path from cwd (for vitest execution)
+  try {
+    const cwdPath = path.join(process.cwd(), 'build', 'Release', 'graph.node');
+    if (fs.existsSync(cwdPath)) {
+      return require(cwdPath);
+    }
+  } catch (e) {
+    // Continue
+  }
+  
+  // Last resort
   try {
      return require('../../../build/Release/graph.node');
   } catch (e) {

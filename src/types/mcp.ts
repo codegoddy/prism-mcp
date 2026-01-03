@@ -6,13 +6,19 @@ export interface ToolDefinition {
 
 export interface ToolResponse {
   content: Array<{
-    type: string;
-    text: string;
+    type: 'text' | 'image' | 'audio' | 'resource';
+    text?: string;
+    data?: string;
+    mimeType?: string;
+    uri?: string;
   }>;
   isError?: boolean;
 }
 
 export interface CallToolRequest {
-  name: string;
-  arguments: Record<string, unknown>;
+  method: 'tools/call';
+  params: {
+    name: string;
+    arguments?: Record<string, unknown>;
+  };
 }

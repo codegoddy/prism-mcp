@@ -71,8 +71,8 @@ describe('TypeScriptParser Rich Parsing', () => {
     const info = parser.extractTypeInfo(code, 'math.ts');
     expect(info).toHaveLength(1);
     expect(info[0].name).toBe('add');
-    expect(info[0].returnType).toBe('TSNumberKeyword');
+    expect(info[0].returnType).toBe('number');
     expect(info[0].params).toHaveLength(2);
-    expect(info[0].params[0].type).toBe('TSNumberKeyword');
+    expect(info[0].params[0].type).toBe('number');
   });
 });

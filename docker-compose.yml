@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  prism-mcp:
+    build: .
+    # Important: We must keep stdin open for MCP communication if running in interaction mode
+    stdin_open: true 
+    tty: true
+    # Mount the user's project directory into the container.
+    # The user should change '/path/to/my/projects' to the folder they want to analyze.
+    # The internal path '/projects' will be what Prism sees.
+    volumes:
+      - ${PROJECTS_DIR:-./}:/projects
+    environment:
+      - PROJECT_ROOT=/projects

@@ -8,7 +8,7 @@
     "prism-mcp": "./build/index.js"
   },
   "scripts": {
-    "build": "node-gyp rebuild && tsup",
+    "build": "rm -rf build && node-gyp rebuild && tsup",
     "build:native": "node-gyp rebuild",
     "dev": "tsup --watch",
     "test": "vitest",
@@ -37,7 +37,7 @@
     "node": ">=20.0.0"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.0.0",
+    "@modelcontextprotocol/sdk": "1.20.0",
     "@typescript-eslint/parser": "^7.0.0",
     "@typescript-eslint/types": "^7.0.0",
     "chokidar": "^5.0.0",

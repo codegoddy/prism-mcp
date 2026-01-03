@@ -128,7 +128,7 @@ function getProjectDirectory(filePath: string): string {
   return filePath.split('/').slice(0, -1).join('/') || '.';
 }
 
-function findSourceFiles(dir: string): string[] {
+export function findSourceFiles(dir: string): string[] {
   const files: string[] = [];
   const extensions = ['.ts', '.tsx', '.js', '.jsx', '.py', '.pyw'];
 
@@ -255,7 +255,32 @@ function extractSymbols(root: ASTNode, filePath: string): SymbolDefinition[] {
             });
           }
         }
+
         break;
+
+      case 'assignment': {
+        const leftNode = node.namedChildren.find(c => c.field === 'left');
+        if (leftNode && leftNode.type === 'identifier') {
+          const varName = leftNode.text;
+          // Treat top-level assignments as definitions
+          // Python assignments are often wrapped in expression_statement
+          const isTopLevel = node.parent?.type === 'module' || 
+                            (node.parent?.type === 'expression_statement' && node.parent.parent?.type === 'module');
+
+          if (isTopLevel) {
+            symbols.push({
+              id: generateSymbolId({ name: varName, filePath, type: 'variable' }),
+              name: varName,
+              type: 'variable',
+              filePath,
+              startPosition: leftNode.startPosition,
+              endPosition: leftNode.endPosition,
+              isExported: isExported(node),
+            });
+          }
+        }
+        break;
+      }
 
       case 'formal_parameters':
         for (const param of node.namedChildren.filter(

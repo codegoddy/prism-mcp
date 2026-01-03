@@ -25,7 +25,7 @@ export class PythonParser extends BaseParser {
     logger.debug('Python parser initialized');
   }
 
-  parse(source: string, filePath?: string): ParseResult {
+  override parse(source: string, filePath?: string): ParseResult {
     this.ensureParserInitialized();
 
     const startTime = performance.now();
@@ -64,7 +64,7 @@ export class PythonParser extends BaseParser {
     }
   }
 
-  extractTypeInfo(source: string, filePath?: string) {
+  extractTypeInfo(source: string, _filePath?: string) {
     this.ensureParserInitialized();
     const tree = this.parser!.parse(source);
 

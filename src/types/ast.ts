@@ -216,3 +216,183 @@ export interface RefactorSuggestion {
     endPosition: Position;
   }[];
 }
+
+export interface RefactorImpact {
+  targetElement: {
+    name: string;
+    type: string;
+    filePath: string;
+    line: number;
+  };
+  proposedChanges: {
+    parameterChanges?: Array<{
+      name: string;
+      oldType?: string;
+      newType?: string;
+      removed?: boolean;
+      added?: boolean;
+    }>;
+    returnTypeChange?: {
+      oldType: string;
+      newType: string;
+    };
+    rename?: {
+      oldName: string;
+      newName: string;
+    };
+  };
+  affectedLocations: Array<{
+    filePath: string;
+    line: number;
+    column: number;
+    context: string;
+    requiredChanges: string[];
+  }>;
+  breakingChanges: string[];
+  suggestedUpdates: string[];
+  riskLevel: 'low' | 'medium' | 'high' | 'critical';
+  totalReferences: number;
+}
+
+export interface FlowNode {
+  id: string;
+  name: string;
+  type: string;
+  filePath: string;
+  line: number;
+  className?: string;
+  isExported?: boolean;
+}
+
+export interface FlowEdge {
+  from: string;
+  to: string;
+  type: string;
+  filePath: string;
+  line: number;
+}
+
+export interface FlowAnalysis {
+  entryPoints: Array<{
+    name: string;
+    type: string;
+    filePath: string;
+    line: number;
+  }>;
+  flowGraph: {
+    nodes: FlowNode[];
+    edges: FlowEdge[];
+  };
+  analysisScope: number;
+  maxDepth: number;
+  totalNodes: number;
+  totalEdges: number;
+}
+
+export interface TypeOrigin {
+  type: string;
+  source:
+    | 'explicit_annotation'
+    | 'literal_inference'
+    | 'function_definition'
+    | 'interface_property'
+    | 'generic_inference';
+  location: string;
+}
+
+export interface TypeRelationship {
+  fromType: string;
+  toType: string;
+  relationship:
+    | 'return_type_of'
+    | 'parameter_of'
+    | 'property_of'
+    | 'extends'
+    | 'implements'
+    | 'has_property';
+}
+
+export interface TypeFlowAnalysis {
+  targetLocation: {
+    filePath: string;
+    line: number;
+    column: number;
+  };
+  resolvedType: string;
+  typeOrigins: TypeOrigin[];
+  typeRelationships: TypeRelationship[];
+  inferenceChain: string[];
+  confidence: 'high' | 'medium' | 'low';
+}
+
+export interface GenericTypeParameter {
+  name: string;
+  constraint?: string;
+  defaultType?: string;
+}
+
+export interface GenericTypeDefinition {
+  name: string;
+  typeParameters: GenericTypeParameter[];
+  resolvedType: string;
+  typeArguments: string[];
+}
+
+export interface ConditionalType {
+  checkType: string;
+  extendsType: string;
+  trueType: string;
+  falseType: string;
+  inferredType?: string;
+}
+
+export interface TemplateLiteralType {
+  parts: TemplatePart[];
+  inferredType?: string;
+}
+
+export interface TemplatePart {
+  type: 'string' | 'placeholder' | 'union';
+  value: string;
+  alternatives?: string[];
+}
+
+export interface TypeNarrowing {
+  variableName: string;
+  narrowedType: string;
+  originalType: string;
+  narrowingReason: TypeNarrowingReason;
+  location: {
+    filePath: string;
+    line: number;
+    column: number;
+  };
+}
+
+export interface TypeNarrowingReason {
+  type: 'typeof' | 'instanceof' | 'equality' | 'in' | 'is' | 'assertion' | 'control_flow';
+  detail: string;
+  condition?: string;
+}
+
+export interface AdvancedTypeInfo {
+  genericResolution?: GenericTypeDefinition;
+  conditionalType?: ConditionalType;
+  templateLiteralType?: TemplateLiteralType;
+  typeNarrowing?: TypeNarrowing[];
+  unionTypes?: string[];
+  intersectionTypes?: string[];
+  inferType?: {
+    typeParameter: string;
+    inferredAs: string;
+    location: string;
+  };
+}
+
+export interface TypeResolutionContext {
+  filePath: string;
+  typeParameters: Map<string, string>;
+  typeAliases: Map<string, string>;
+  interfaces: Map<string, InterfaceDefinition>;
+  symbols: Map<string, SymbolDefinition>;
+}
